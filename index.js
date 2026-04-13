@@ -1,13 +1,9 @@
-const baseUrl = "http://localhost:5102/api/Records";
+const baseUrl = "http://localhost:5102/api/records";
 
 Vue.createApp({
     data() {
         return {
-            records: [],
-            newRecord: {
-                name: "",
-                email: "",
-            }
+            records: []
         }
     },
     methods: {
@@ -15,5 +11,8 @@ Vue.createApp({
             const response = await fetch(baseUrl);
             this.records = await response.json();
         }
+    },
+    mounted() {
+        this.getRecords(); // loader automatisk når siden åbner
     }
-}).mount("#app")
+}).mount("#app");

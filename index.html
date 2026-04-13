@@ -4,11 +4,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <title>Music Records</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
 
 <body>
+    <h1>Music Records</h1>
 
+    <div id="app">
+
+        <button @click="getRecords">Load Records</button>
+
+        <table v-if="records.length > 0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Duration</th>
+                    <th>Year</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="record in records" :key="record.id">
+                    <td>{{ record.id }}</td>
+                    <td>{{ record.title }}</td>
+                    <td>{{ record.artist }}</td>
+                    <td>{{ record.durationInSeconds }}</td>
+                    <td>{{ record.publicationYear }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p v-else>No records loaded</p>
+
+    </div>
+
+    <script src="index.js"></script>
 </body>
-
 </html>
