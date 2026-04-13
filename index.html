@@ -5,12 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
     <title>Music Records</title>
 
     <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-bar input {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-bar button {
+            padding: 6px 14px;
+            cursor: pointer;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -34,31 +57,45 @@
 
     <div id="app">
 
-        <button @click="getRecords">Load Records</button>
+        <div class="search-bar">
+            <input
+                v-model="searchTitle"
+                @keyup.enter="getRecords"
+                type="text"
+                placeholder="Search by title..."
+            />
+            <input
+                v-model="searchArtist"
+                @keyup.enter="getRecords"
+                type="text"
+                placeholder="Search by artist..."
+            />
+            <button @click="getRecords">Search</button>
+            <button @click="clearFilters">Clear</button>
+        </div>
 
-        <table v-if="records.length > 0">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Artist</th>
-                    <th>Duration</th>
-                    <th>Year</th>
-                </tr>
-            </thead>
+<table v-if="records.length > 0">
+    <thead>
+        <tr>
+            <th @click="sortBy('id')" style="cursor:pointer">Id {{ sortIcon('id') }}</th>
+            <th @click="sortBy('title')" style="cursor:pointer">Title {{ sortIcon('title') }}</th>
+            <th @click="sortBy('artist')" style="cursor:pointer">Artist {{ sortIcon('artist') }}</th>
+            <th @click="sortBy('durationInSeconds')" style="cursor:pointer">Duration {{ sortIcon('durationInSeconds') }}</th>
+            <th @click="sortBy('publicationYear')" style="cursor:pointer">Year {{ sortIcon('publicationYear') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="record in sortedRecords" :key="record.id">
+            <td>{{ record.id }}</td>
+            <td>{{ record.title }}</td>
+            <td>{{ record.artist }}</td>
+            <td>{{ record.durationInSeconds }}</td>
+            <td>{{ record.publicationYear }}</td>
+        </tr>
+    </tbody>
+</table>
 
-            <tbody>
-                <tr v-for="record in records" :key="record.id">
-                    <td>{{ record.id }}</td>
-                    <td>{{ record.title }}</td>
-                    <td>{{ record.artist }}</td>
-                    <td>{{ record.durationInSeconds }}</td>
-                    <td>{{ record.publicationYear }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <p v-else>No records loaded</p>
+        <p v-else>No records found</p>
 
     </div>
 
