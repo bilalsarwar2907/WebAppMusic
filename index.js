@@ -14,7 +14,10 @@ Vue.createApp({
             isLocal: true,
             token: null,
             role: null,
-            loginData: { username: "", password: "" },
+            loginData: { 
+    username: localStorage.getItem("username") || "", 
+    password: "" // never save password
+},
             loginMessage: ""
         };
     },
@@ -56,6 +59,7 @@ Vue.createApp({
                         // ✅ Persist to localStorage
         localStorage.setItem("token", this.token);
         localStorage.setItem("role", this.role);
+        localStorage.setItem("username", this.loginData.username); // ✅ save username
                 this.loginMessage = "Login successful!";
                 await this.getRecords();
             } catch (ex) {
@@ -70,7 +74,8 @@ Vue.createApp({
             // ✅ FIX 3: lowercase loginMessage (was LoginMessage)
             this.loginMessage = "Logged out.";
             localStorage.removeItem("token");
-    localStorage.removeItem("role");
+            localStorage.removeItem("role");
+            localStorage.removeItem("username"); // ✅ remove username on logout
         },
         async clearFilters() {
             this.searchTitle = "";
