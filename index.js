@@ -1,4 +1,5 @@
 const baseUrl = "http://localhost:5102/api/records";
+const localAuthUrl = "http://localhost:5102/api/auth/login";
 
 Vue.createApp({
     data() {
@@ -7,7 +8,12 @@ Vue.createApp({
             searchTitle: "",
             searchArtist: "",
             sortKey: "",
-            sortOrder: 1  // 1 = ascending, -1 = descending
+            sortOrder: 1,  // 1 = ascending, -1 = descending
+            isLocal: true,
+            token: null,
+            role: null,
+            loginData: {username: "", password: ""},
+            loginMessage: ""
         };
     },
     computed: {
@@ -24,6 +30,10 @@ Vue.createApp({
         }
     },
     methods: {
+        toggleServer(){
+            this.isLocal = !this.isLocal;
+            this.getRecords();
+        },
         async getRecords() {
             const params = new URLSearchParams();
             if (this.searchTitle) params.append("title", this.searchTitle);
@@ -31,6 +41,25 @@ Vue.createApp({
             const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
             const response = await fetch(url);
             this.records = await response.json();
+        },
+        async login(){
+            try{
+                const response = await axios.post(
+                    this.isLocal ? localAuthUrl : this.loginData
+                );
+                this.token = response.data.token;
+                this.role = response.data.role;
+                this.loginMessage = "Login successful!";
+                await this.getRecords();
+            }
+            catch (ex){
+                this.LoginMessage = ex.message
+            }
+        },
+        logout(){
+            this.token = null;
+            this.role = null;
+            this.LoginMessage = "Logged out.";
         },
         async clearFilters() {
             this.searchTitle = "";
