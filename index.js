@@ -4,6 +4,8 @@ const localAuthUrl = "http://localhost:5102/api/auth/login";
 Vue.createApp({
     data() {
         return {
+              token: localStorage.getItem("token") || null,
+        role: localStorage.getItem("role") || null,
             records: [],
             searchTitle: "",
             searchArtist: "",
@@ -41,6 +43,7 @@ Vue.createApp({
             const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
             const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
             const response = await fetch(url, { headers });
+            
             this.records = await response.json();
         },
         async login() {
@@ -50,6 +53,9 @@ Vue.createApp({
                 const response = await axios.post(authUrl, this.loginData);
                 this.token = response.data.token;
                 this.role = response.data.role;
+                        // ✅ Persist to localStorage
+        localStorage.setItem("token", this.token);
+        localStorage.setItem("role", this.role);
                 this.loginMessage = "Login successful!";
                 await this.getRecords();
             } catch (ex) {
@@ -63,6 +69,8 @@ Vue.createApp({
             this.records = [];
             // ✅ FIX 3: lowercase loginMessage (was LoginMessage)
             this.loginMessage = "Logged out.";
+            localStorage.removeItem("token");
+    localStorage.removeItem("role");
         },
         async clearFilters() {
             this.searchTitle = "";
