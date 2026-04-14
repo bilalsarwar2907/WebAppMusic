@@ -8,11 +8,11 @@ Vue.createApp({
             searchTitle: "",
             searchArtist: "",
             sortKey: "",
-            sortOrder: 1,  // 1 = ascending, -1 = descending
+            sortOrder: 1,
             isLocal: true,
             token: null,
             role: null,
-            loginData: {username: "", password: ""},
+            loginData: { username: "", password: "" },
             loginMessage: ""
         };
     },
@@ -30,7 +30,7 @@ Vue.createApp({
         }
     },
     methods: {
-        toggleServer(){
+        toggleServer() {
             this.isLocal = !this.isLocal;
             this.getRecords();
         },
@@ -39,27 +39,30 @@ Vue.createApp({
             if (this.searchTitle) params.append("title", this.searchTitle);
             if (this.searchArtist) params.append("artist", this.searchArtist);
             const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
-            const response = await fetch(url);
+            const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+            const response = await fetch(url, { headers });
             this.records = await response.json();
         },
-        async login(){
-            try{
-                const response = await axios.post(
-                    this.isLocal ? localAuthUrl : this.loginData
-                );
+        async login() {
+            try {
+                // ✅ FIX 1: pass the correct URL and loginData as the request body
+                const authUrl = this.isLocal ? localAuthUrl : localAuthUrl;
+                const response = await axios.post(authUrl, this.loginData);
                 this.token = response.data.token;
                 this.role = response.data.role;
                 this.loginMessage = "Login successful!";
                 await this.getRecords();
-            }
-            catch (ex){
-                this.LoginMessage = ex.message
+            } catch (ex) {
+                // ✅ FIX 2: lowercase loginMessage (was LoginMessage)
+                this.loginMessage = ex.message;
             }
         },
-        logout(){
+        logout() {
             this.token = null;
             this.role = null;
-            this.LoginMessage = "Logged out.";
+            this.records = [];
+            // ✅ FIX 3: lowercase loginMessage (was LoginMessage)
+            this.loginMessage = "Logged out.";
         },
         async clearFilters() {
             this.searchTitle = "";
