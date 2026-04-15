@@ -28,8 +28,18 @@ Vue.createApp({
             // role: null,
 
             loginData: { username: "", password: "" },
-            loginMessage: ""
-        };
+            loginMessage: "",
+
+             // ✅ ADD THIS
+        updateData: {
+            id: null,
+            title: "",
+            artist: "",
+            publicationYear: null,
+            durationInSeconds: null
+        },
+        updateMessage: "",
+     };
     },
 
     computed: {
@@ -142,7 +152,7 @@ Vue.createApp({
         },
 
         clearAddForm() {
-            // ❌ FIX: indentation + consistent formatting
+           
             this.addData = {
                 title: "",
                 artist: "",
@@ -171,7 +181,62 @@ Vue.createApp({
             } catch (ex) {
                 alert(ex.message);
             }
-        }
+        },
+
+async updateRecord() {
+    // Validate ID
+    if (!this.updateData.id || isNaN(this.updateData.id) || this.updateData.id <= 0) {
+        alert("Please enter a valid record ID");
+        return;
+    }
+
+    // Validate fields
+    if (!this.updateData.title ||
+        !this.updateData.artist ||
+        !this.updateData.publicationYear ||
+        this.updateData.publicationYear < 1900 ||
+        this.updateData.publicationYear > 2025 ||
+        !this.updateData.durationInSeconds ||
+        this.updateData.durationInSeconds <= 0) {
+
+        alert("Please fill in all fields with valid values. PublicationYear must be 1900–2025");
+        return;
+    }
+
+    // Artist length check
+    if (this.updateData.artist.trim().length < 2) {
+        alert("Artist name must be at least 2 characters");
+        return;
+    }
+
+    const url = baseUrl + "/" + this.updateData.id;
+
+    try {
+        const response = await axios.put(
+            url,
+            this.updateData,
+            { headers: { Authorization: "Bearer " + this.token } }
+        );
+
+        this.updateMessage = "Response " + response.status + " " + response.statusText;
+
+        // Reset form
+        this.updateData = {
+            id: null,
+            title: "",
+            artist: "",
+            publicationYear: null,
+            durationInSeconds: null
+        };
+
+        // Refresh list
+        this.getRecords();
+
+    } catch (ex) {
+        alert(ex.message);
+    }
+}
+
     },
 
     mounted() {
