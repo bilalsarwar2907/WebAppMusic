@@ -1,11 +1,14 @@
 const baseUrl = "http://localhost:5102/api/records";
+const localUrl = "http://localhost:5102/api/records";
 const localAuthUrl = "http://localhost:5102/api/auth/login";
 
 Vue.createApp({
     data() {
         return {
               token: localStorage.getItem("token") || null,
-        role: localStorage.getItem("role") || null,
+              role: localStorage.getItem("role") || null,
+              addData: { title: "", artist: "", durationInSeconds: null, publicationYear: null },
+              addMessage: "",
             records: [],
             searchTitle: "",
             searchArtist: "",
@@ -90,7 +93,51 @@ Vue.createApp({
         sortIcon(key) {
             if (this.sortKey !== key) return "⇅";
             return this.sortOrder === 1 ? "↑" : "↓";
-        }
+        },
+
+
+ // ---------- Add Record (Admin only) ----------
+        // Sends a POST request to add a new record.
+        // Requires Authorization header with the JWT token.
+        // Validates input before sending.
+
+
+       async addRecord() {
+    // Basic validation: all fields must be filled and durationInSeconds > 0
+    if (!this.addData.title || !this.addData.artist ||
+        this.addData.durationInSeconds === null || this.addData.durationInSeconds <= 0 ||
+        !this.addData.publicationYear) {
+        alert("Please fill in all fields with valid values")
+        return
+    }
+    try {
+        const response = await axios.post(
+            this.isLocal ? localUrl : azureUrl,
+            this.addData,
+            { headers: { Authorization: "Bearer " + this.token } }  // Send token
+        )
+        this.addMessage = "Response " + response.status + " " + response.statusText
+        // After successful addition, refresh the records list to show the new record.
+        this.getRecords()
+    } catch (ex) {
+        alert(ex.message)
+    }
+},
+
+clearAddForm() {
+    this.addData = {
+        title: '',
+        artist: '',
+        publicationYear: '',
+        durationInSeconds: null
+    };
+    this.addMessage = '';  // optional: also clear the feedback message
+}
+
+
+
+
+
     },
     mounted() {
         this.getRecords();

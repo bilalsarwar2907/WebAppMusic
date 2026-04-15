@@ -11,49 +11,7 @@
     <!-- ✅ FIX 5: Added axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-    <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-        }
-
-        .search-bar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .search-bar input {
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .search-bar button {
-            padding: 6px 14px;
-            cursor: pointer;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
@@ -123,9 +81,51 @@
 
         <p v-else>No records found</p>
 
-    </div>
 
-    <script src="index.js"></script>
+        <!-- ================================================== -->
+        <!-- SECTION 6: ADD NEW MUSIC RECORD (ADMIN ONLY)       -->
+        <!-- ================================================== -->
+        <!-- v-if="role === 'Admin'": this card is visible only to Admin users.
+     It contains form fields to add a new record. -->
+        <div class="card mt-3" v-if="role === 'Admin'">
+            <div class="card-body">
+                <h5 class="card-title">➕ Add New Music Record</h5>
+                <div class="row g-2">
+                    <!-- Title input: v-model="addData.title" binds to addData.title -->
+                    <div class="col-md-3">
+                        <input v-model="addData.title" class="form-control" placeholder="Title" />
+                    </div>
+                    <!-- Artist input: bound to addData.artist -->
+                    <div class="col-md-3">
+                        <input v-model="addData.artist" class="form-control" placeholder="Artist" />
+                    </div>
+                    <!-- Publication Year input: bound to addData.publicationYear -->
+                    <div class="col-md-2">
+                        <input v-model="addData.publicationYear" class="form-control" placeholder="Year" />
+                    </div>
+                    <!-- Duration input: type="number" ensures numeric input, v-model.number automatically converts value to a number. -->
+                    <div class="col-md-2">
+                        <input v-model.number="addData.durationInSeconds" type="number" class="form-control"
+                            placeholder="Duration (sec)" />
+                    </div>
+                    <!-- Add button: @click="addRecord" sends the data to the server via POST request.
+                 On success, the new record appears in the table and the form can be cleared. -->
+                    <div class="col-md-2">
+                        <button class="btn btn-success w-100" @click="addRecord">Add</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-secondary w-100" @click="clearAddForm">Clear Form</button>
+                    </div>
+                    <!-- Small feedback message: shows success or error after adding a record -->
+                    <div class="mt-2 text-muted small">{{ addMessage }}</div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <script src="index.js"></script>
 </body>
 
 </html>
