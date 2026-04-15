@@ -120,7 +120,29 @@
                     <div class="mt-2 text-muted small">{{ addMessage }}</div>
                 </div>
             </div>
-
+            <!-- ================================================== -->
+            <!-- SECTION 7: DELETE Record BY ID (ADMIN ONLY)          -->
+            <!-- ================================================== -->
+            <!-- Alternative delete method: allows Admin to enter a record ID and delete directly.
+                     v-if="role === 'Admin'" ensures only admins see this card. -->
+            <div class="card mt-3" v-if="role === 'Admin'">
+                <div class="card-body">
+                    <h5 class="card-title">🗑️ Delete by ID</h5>
+                    <div class="row g-2">
+                        <!-- Numeric input: v-model.number="deleteId" binds to deleteId property and ensures numeric type. -->
+                        <div class="col-md-3">
+                            <input v-model.number="deleteId" type="number" class="form-control"
+                                placeholder="Record ID" />
+                        </div>
+                        <!-- Delete button: @click="deleteBook(deleteId)" passes the entered ID to the deleteRecord method. -->
+                        <div class="col-md-3">
+                            <button class="btn btn-danger w-100" @click="deleteRecord(deleteId)">Delete</button>
+                        </div>
+                    </div>
+                    <!-- Shows result message after delete operation -->
+                    <div class="mt-2 text-muted small">{{ deleteMessage }}</div>
+                </div>
+            </div>
 
 
         </div>
