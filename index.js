@@ -1,6 +1,6 @@
-const baseUrl = "http://localhost:5102/api/records";
+const baseUrl = "http://restmusicrepoapi.azurewebsites.net/api/records";
 const localUrl = "http://localhost:5102/api/records";
-const localAuthUrl = "http://localhost:5102/api/auth/login";
+const localAuthUrl = "https://restmusicrepoapi.azurewebsites.net/api/auth/login";
 
 Vue.createApp({
     data() {
