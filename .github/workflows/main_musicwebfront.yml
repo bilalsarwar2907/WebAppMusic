@@ -13,9 +13,9 @@ jobs:
       - name: Get files from GitHub
         uses: actions/checkout@v4
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+      - name: Push to Azure
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'ASP-MoveMusic-ac84' # This name must match Azure exactly
+          app-name: 'ASP-MoveMusic-ac84'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
