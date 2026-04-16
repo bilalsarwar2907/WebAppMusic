@@ -20,17 +20,9 @@ Vue.createApp({
             searchArtist: "",
             sortKey: "",
             sortOrder: 1,
-
             isLocal: true,
-
-            // ❌ FIX: removed duplicate token + role here
-            // token: null,
-            // role: null,
-
             loginData: { username: "", password: "" },
             loginMessage: "",
-
-             // ✅ ADD THIS
         updateData: {
             id: null,
             title: "",
