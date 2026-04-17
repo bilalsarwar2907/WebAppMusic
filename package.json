@@ -1,0 +1,11 @@
+{
+  "name": "musicwebfront",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "pm2 serve /home/site/wwwroot --no-daemon --spa"
+  },
+  "dependencies": {
+    "pm2": "latest",
+    "serve": "latest"
+  }
+}
