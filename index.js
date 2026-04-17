@@ -11,6 +11,7 @@ Vue.createApp({
 
             addData: { title: "", artist: "", durationInSeconds: null, publicationYear: null },
             addMessage: "",
+            addErrors: [],
 
             deleteId: null,
             deleteMessage: "",
@@ -31,6 +32,7 @@ Vue.createApp({
             durationInSeconds: null
         },
         updateMessage: "",
+        updateErrors: []
      };
     },
 
@@ -150,6 +152,7 @@ Vue.createApp({
                 durationInSeconds: null
             };
             this.addMessage = "";
+            this.addErrors = [];
         },
 
         // ---------- Delete Record ----------
@@ -174,13 +177,14 @@ Vue.createApp({
         },
 
 async updateRecord() {
-    // Validate ID
+    this.updateErrors = [];
+    this.updateMessage = "";
+
     if (!this.updateData.id || isNaN(this.updateData.id) || this.updateData.id <= 0) {
-        alert("Please enter a valid record ID");
+        this.updateErrors = ["Please enter a valid record ID."];
         return;
     }
 
-    // Validate fields
     if (!this.updateData.title ||
         !this.updateData.artist ||
         !this.updateData.publicationYear ||
@@ -188,14 +192,12 @@ async updateRecord() {
         this.updateData.publicationYear > 2025 ||
         !this.updateData.durationInSeconds ||
         this.updateData.durationInSeconds <= 0) {
-
-        alert("Please fill in all fields with valid values. PublicationYear must be 1900–2025");
+        this.updateErrors = ["Please fill in all fields with valid values. PublicationYear must be 1900–2025."];
         return;
     }
 
-    // Artist length check
     if (this.updateData.artist.trim().length < 2) {
-        alert("Artist name must be at least 2 characters");
+        this.updateErrors = ["Artist name must be at least 2 characters."];
         return;
     }
 
@@ -208,9 +210,9 @@ async updateRecord() {
             { headers: { Authorization: "Bearer " + this.token } }
         );
 
-        this.updateMessage = "Response " + response.status + " " + response.statusText;
+        this.updateMessage = "Record updated successfully.";
+        this.updateErrors = [];
 
-        // Reset form
         this.updateData = {
             id: null,
             title: "",
@@ -219,13 +221,12 @@ async updateRecord() {
             durationInSeconds: null
         };
 
-        // Refresh list
-        this.getRecords();
-
+        await this.getRecords();
     } catch (ex) {
-        alert(ex.message);
+        this.updateErrors = this.getApiErrors(ex);
+        this.updateMessage = "";
     }
-}
+},
 
     },
 

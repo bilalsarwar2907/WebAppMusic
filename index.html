@@ -101,7 +101,14 @@
                     <div class="col-md-2">
                         <button class="btn btn-secondary w-100" @click="clearAddForm">Clear Form</button>
                     </div>
-                    <div class="mt-2 text-muted small">{{ addMessage }}</div>
+                    <div v-if="addErrors.length" class="alert alert-danger mt-3 mb-0">
+                        <ul class="mb-0 ps-3">
+                            <li v-for="(error, index) in addErrors" :key="'add-error-' + index">{{ error }}</li>
+                        </ul>
+                    </div>
+                    <div v-if="addMessage" class="alert alert-success mt-3 mb-0">
+                        {{ addMessage }}
+                    </div>
                 </div>
             </div>
 
@@ -153,15 +160,19 @@
                             <button class="btn btn-warning w-100" @click="updateRecord">Update</button>
                         </div>
                     </div>
-                    <div class="mt-2" v-if="updateMessage">
-                        <span class="badge bg-warning text-dark">{{ updateMessage }}</span>
+                    <div v-if="updateErrors.length" class="alert alert-danger mt-3 mb-0">
+                        <ul class="mb-0 ps-3">
+                            <li v-for="(error, index) in updateErrors" :key="'update-error-' + index">{{ error }}</li>
+                        </ul>
+                    </div>
+                    <div v-if="updateMessage" class="alert alert-success mt-3 mb-0">
+                        {{ updateMessage }}
                     </div>
                 </div>
             </div>
-        </div> <!-- ✅ Closes the outer admin card -->
-    </div> <!-- ✅ FIXED: Added missing closing tag for <div id="app"> -->
+        </div>
+    </div>
 
-    <!-- ✅ MOVED script OUTSIDE #app (best practice, avoids Vue template confusion) -->
     <script src="index.js"></script>
 </body>
 
