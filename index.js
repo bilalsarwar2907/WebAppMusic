@@ -61,7 +61,7 @@ Vue.createApp({
             if (this.searchTitle) params.append("title", this.searchTitle);
             if (this.searchArtist) params.append("artist", this.searchArtist);
 
-            const url = params.toString() ? `${baseUrl}?${params}` : baseUrl;
+            const url = params.toString() ? `${azureUrl}?${params}` : azureUrl;
             const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
 
             const response = await fetch(url, { headers });
@@ -199,7 +199,7 @@ async updateRecord() {
         return;
     }
 
-    const url = baseUrl + "/" + this.updateData.id;
+    const url = (this.isLocal ? localUrl : azureUrl) + "/" + this.updateData.id;
 
     try {
         const response = await axios.put(
