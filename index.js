@@ -1,7 +1,8 @@
-const baseUrl = "http://restmusicrepoapi.azurewebsites.net/api/records";
+const azureUrl = "https://restmusicrepoapi.azurewebsites.net/api/records";
 const localUrl = "http://localhost:5102/api/records";
-const localAuthUrl = "https://restmusicrepoapi.azurewebsites.net/api/auth/login";
 
+const azureAuthUrl = "https://restmusicrepoapi.azurewebsites.net/api/auth/login";
+const localAuthUrl = "http://localhost:5102/api/auth/login";
 Vue.createApp({
     data() {
         return {
@@ -19,7 +20,7 @@ Vue.createApp({
             searchArtist: "",
             sortKey: "",
             sortOrder: 1,
-            isLocal: true,
+            isLocal: false,
             loginData: { username: "", password: "" },
             loginMessage: "",
         updateData: {
@@ -37,7 +38,6 @@ Vue.createApp({
         sortedRecords() {
             if (!this.sortKey) return this.records;
 
-            // ✅ FIX: indentation corrected inside sort()
             return [...this.records].sort((a, b) => {
                 const valA = a[this.sortKey];
                 const valB = b[this.sortKey];
@@ -70,7 +70,7 @@ Vue.createApp({
 
         async login() {
             try {
-                const authUrl = this.isLocal ? localAuthUrl : localAuthUrl;
+                const authUrl = this.isLocal ? localAuthUrl : azureAuthUrl;
                 const response = await axios.post(authUrl, this.loginData);
 
                 this.token = response.data.token;
@@ -120,7 +120,6 @@ Vue.createApp({
 
         // ---------- Add Record ----------
         async addRecord() {
-            // ❌ FIX: indentation + missing semicolons
             if (!this.addData.title || !this.addData.artist ||
                 this.addData.durationInSeconds === null || this.addData.durationInSeconds <= 0 ||
                 !this.addData.publicationYear) {
