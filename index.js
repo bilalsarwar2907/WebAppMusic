@@ -5,7 +5,6 @@ const localAuthUrl = "https://restmusicrepoapi.azurewebsites.net/api/auth/login"
 Vue.createApp({
     data() {
         return {
-            // ✅ FIX: keep only ONE token + role (you had duplicates later)
             token: localStorage.getItem("token") || null,
             role: localStorage.getItem("role") || null,
 
